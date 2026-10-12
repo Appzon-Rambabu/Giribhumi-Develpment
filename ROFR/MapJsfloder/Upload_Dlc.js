@@ -523,164 +523,177 @@ $(function () {
 });
 
 $(function () {
+
     $("#Update_Image").click(function () {
-        var data = new FormData();
-        var file = $("#FileUpload").get(0).files;
-        data.append('file', file[0]);
-        data.append("Type", '3');
-        data.append('Dlcfile', "Dlcfile");
-        data.append('dlc_date', $("#todate").val());
-        data.append('ID', $("#ben_id_multiple").text());
-        //data.append('username', $("#ContentPlaceHolder1_username").text());
-        //data.append('ip', $("#ContentPlaceHolder1_ipadress").text());
-        if ($("#todate").val() != "") {
 
-            if ($("#txt_image").val() != "") {
-                $('#preloader').show();
-                var data1 = $.ajax({
-                    type: "POST", url: "../Giribhumi/Multipart_Dlc_Upload", data: data, cache: false, contentType: false, processData: false,
-                    //headers:
-              //{
-                //  Authorization: 'Bearer ' + $("#ContentPlaceHolder1_tk").text()
-              //},
-                    success: function (res) {
-                        console.log(res);
-                        if (res.res.Status == "200") {
+        // ==========================================
+        // 1. Validate DLC Date
+        // ==========================================
+        var dlcDate = $("#todate").val();
 
-
-                            alert("Dlc Uploaded Successfully");
-                            Benificiary_details_multi($("#Ben_multi").val());
-                        }
-                        else if (res.res.Status == "102") {
-
-
-                            alert("Please enter valid file formats");
-
-                        }
-                        else if (res.res.Status == "103") {
-
-
-                            alert("Only jpeg, png , pdf formats are allowed ");
-
-                        }
-                        else if (res.res.Status == "104") {
-
-
-                            alert("Selected files are not Image or PDF. Please check and select Image or PDF to upload");
-
-                        }
-                            //if (res.res.Status == "101") {
-
-
-                            //    alert("Updation Failed...Plot Id does not exists");
-
-                            //}
-                        else {
-                            alert(res.res.Message);
-                        }
-                    },
-                    error: function (error) {
-                        alert("Dlc Upload Failed.");
-
-                    }
-                }, 'json');
-                $('#preloader').hide();
-                $('#showupdate').modal('toggle');
-
-
-                $('input[type="checkbox"]:checked').prop('checked', false);
-
-            }
-            else {
-                alert("Please select Dlc File");
-            }
-        }
-        else {
+        if (dlcDate == "") {
             alert("Please select Dlc Issued Date");
+            return;
         }
+
+        // ==========================================
+        // 2. Validate DLC File
+        // ==========================================
+        var fileInput = $("#FileUpload").get(0);
+
+        if (!fileInput || fileInput.files.length === 0) {
+            alert("Please select Dlc File");
+            return;
+        }
+
+        var file = fileInput.files[0];
+
+        // ==========================================
+        // 3. Validate Filename
+        // ==========================================
+        if ($("#txt_image").val() == "") {
+            alert("Please select Dlc File");
+            return;
+        }
+
+        // ==========================================
+        // 4. Get Beneficiary IDs
+        // ==========================================
+        var beneficiaryIds = $("#ben_id_multiple").text();
+
+        if (beneficiaryIds == "") {
+            alert("Please select at least one beneficiary");
+            return;
+        }
+
+        // ==========================================
+        // 5. Create FormData
+        // ==========================================
+        var data = new FormData();
+
+        data.append("file", file);
+        data.append("Type", "3");
+        data.append("Dlcfile", "Dlcfile");
+
+        // DLC DATE
+        data.append("dlc_date", dlcDate);
+
+        // Beneficiary IDs
+        data.append("ID", beneficiaryIds);
+
+        // ==========================================
+        // 6. Console Debug
+        // ==========================================
+        console.log("=================================");
+        console.log("DLC DATE SENT:", dlcDate);
+        console.log("BENEFICIARY IDS:", beneficiaryIds);
+        console.log("FILE:", file.name);
+        console.log("=================================");
+
+        // ==========================================
+        // 7. Show Loader
+        // ==========================================
+        $("#preloader").show();
+
+        // ==========================================
+        // 8. Upload DLC
+        // ==========================================
+        $.ajax({
+
+            type: "POST",
+
+            url: "../Giribhumi/Multipart_Dlc_Upload",
+
+            data: data,
+
+            cache: false,
+
+            contentType: false,
+
+            processData: false,
+
+            dataType: "json",
+
+            // ======================================
+            // SUCCESS
+            // ======================================
+            success: function (res) {
+
+                console.log("UPLOAD RESPONSE:", res);
+                console.log("DATE SENT:", dlcDate);
+
+                if (res.res.Status == "200") {
+
+                    alert("Dlc Uploaded Successfully");
+
+                    // Refresh beneficiary data
+                    Benificiary_details_multi(
+                        $("#Ben_multi").val()
+                    );
+                }
+
+                else if (res.res.Status == "102") {
+
+                    alert("Please enter valid file formats");
+
+                }
+
+                else if (res.res.Status == "103") {
+
+                    alert("Only jpeg, png, pdf formats are allowed");
+
+                }
+
+                else if (res.res.Status == "104") {
+
+                    alert(
+                        "Selected files are not Image or PDF. " +
+                        "Please check and select Image or PDF to upload"
+                    );
+
+                }
+
+                else {
+
+                    console.log("SERVER MESSAGE:", res.res.Message);
+
+                    alert(
+                        "Server Message: " +
+                        res.res.Message
+                    );
+                }
+            },
+
+            // ======================================
+            // ERRORMultipart_Dlc_Upload
+            // ======================================
+            error: function (error) {
+
+                console.log("UPLOAD ERROR:", error);
+
+                console.log("DATE SENT:", dlcDate);
+
+                alert("Dlc Upload Failed.");
+            },
+
+            // ======================================
+            // COMPLETE
+            // ======================================
+            complete: function () {
+
+                $("#preloader").hide();
+
+                $("#showupdate").modal("hide");
+
+                // Uncheck selected checkboxes
+                $("input.dt_check:checked").prop(
+                    "checked",
+                    false
+                );
+            }
+
+        });
+
     });
-
-    //$("#Update_Image").click(function () {
-
-    //    // 🔹 Date validation
-    //    if ($("#todate").val() === "") {
-    //        alert("Please select Dlc Issued Date");
-    //        return;
-    //    }
-
-    //    // 🔹 File validation
-    //    if ($("#FileUpload")[0].files.length === 0) {
-    //        alert("Please select Dlc File");
-    //        return;
-    //    }
-
-    //    // 🔹 Get selected checkbox IDs
-    //    var table = $('#dt_bplot_tbl').DataTable();
-    //    var matches = [];
-
-    //    var checkedcollection = table.$(".dt_check:checked", { page: "all" });
-    //    checkedcollection.each(function () {
-    //        matches.push($(this).val());
-    //    });
-
-    //    if (matches.length === 0) {
-    //        alert("Please select at least one beneficiary");
-    //        return;
-    //    }
-
-    //    console.log("Sending IDS:", matches.join(',')); // 🔍 debug
-
-    //    // 🔹 Prepare FormData
-    //    var data = new FormData();
-    //    data.append("file", $("#FileUpload")[0].files[0]);
-    //    data.append("IDS", matches.join(','));   // ✅ MULTIPLE IDS
-    //    data.append("TYPE", "3");
-    //    data.append("dlc_date", $("#todate").val());
-
-    //    // 🔹 Show loader
-    //    $('#preloader').show();
-
-    //    $.ajax({
-    //        type: "POST",
-    //        url: "/Giribhumi/Multipart_Dlc_Upload",
-    //        data: data,
-    //        cache: false,
-    //        contentType: false,
-    //        processData: false,
-    //        success: function (res) {
-    //            console.log(res);
-
-    //            if (res.res.Status === "1") {
-    //                alert("DLC Uploaded Successfully");
-    //                Benificiary_details_multi($("#Ben_multi").val());
-    //                // 🔹 Close modal
-    //                $('#showupdate').modal('hide');
-    //                // 🔹 Uncheck checkboxes
-    //                $('input.dt_check:checked').prop('checked', false);
-                   
-    //            }
-    //            else if (res.res.Status === "102") {
-    //                alert("Please enter valid file formats");
-    //            }
-    //            else if (res.res.Status === "103") {
-    //                alert("Only jpeg, png, pdf formats are allowed");
-    //            }
-    //            else if (res.res.Status === "104") {
-    //                alert("Selected file is not Image or PDF");
-    //            }
-    //            else {
-    //                alert(res.res.Message || "DLC Upload Failed");
-    //            }
-    //        },
-    //        error: function () {
-    //            alert("DLC Upload Failed");
-    //        },
-    //        complete: function () {
-    //            // 🔹 Hide loader always
-    //            $('#preloader').hide();
-    //        }
-    //    });
-    //});
-
 
 });

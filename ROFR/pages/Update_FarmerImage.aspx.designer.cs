@@ -24,6 +24,15 @@ namespace ROFR.pages
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
+        /// UPDATED control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress UPDATED;
+
+        /// <summary>
         /// UpdatePanel1 control.
         /// </summary>
         /// <remarks>

@@ -671,17 +671,32 @@ namespace ROFR.Controllers
                     res.Message = "Dlc_date missing";
                     return Request.CreateResponse(HttpStatusCode.OK, new { res });
                 }
+                //commented by sudeep 
+                //DateTime parsedDate;
+                //if (!DateTime.TryParse(folderDate, out parsedDate))
+                //{
+                //    res.Status = "107";
+                //    res.Message = "Invalid date";
+                //    return Request.CreateResponse(HttpStatusCode.OK, new { res });
+                //}
 
+                //string formattedFolder = parsedDate.ToString("dd-MM-yyyy");
+                //added by sudeep 01102026
                 DateTime parsedDate;
-                if (!DateTime.TryParse(folderDate, out parsedDate))
+
+                if (!DateTime.TryParseExact(
+                        folderDate,
+                        "dd/MM/yyyy",
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        System.Globalization.DateTimeStyles.None,
+                        out parsedDate))
                 {
                     res.Status = "107";
-                    res.Message = "Invalid date";
+                    res.Message = "Invalid date. Expected format: dd/MM/yyyy";
                     return Request.CreateResponse(HttpStatusCode.OK, new { res });
                 }
 
                 string formattedFolder = parsedDate.ToString("dd-MM-yyyy");
-
                 // 🔹 Base Path
                 string basePath = @"F:\tribal\DLC";
 
@@ -3129,6 +3144,81 @@ namespace ROFR.Controllers
                 sw.Stop();
                 System.Diagnostics.Debug.WriteLine("Controller Time : " +sw.Elapsed.TotalSeconds + " sec");
                 return result;
+            }
+            catch (Exception ex)
+            {
+                throw new HttpResponseException(Request.CreateErrorResponse(HttpStatusCode.BadRequest, ex.Message));
+            }
+        }
+        //---------------------------Mobile Login Api Service----------------------//
+        [HttpPost]
+        [Route("MobileLogin")]
+        public dynamic MobileLogin(addbeneficiary_details obj)
+        {
+            try
+            {
+                // Get user details from existing method
+                dynamic result = gs.Mobile_Login_data_valid(obj);
+
+                if (result.status == "1" && result.Details != null)
+                {
+                    DataTable dt = result.Details as DataTable;
+
+                    if (dt != null && dt.Rows.Count > 0)
+                    {
+                        // Password entered by user
+                        string enteredPassword = obj.Password;
+
+                        // Hash entered password
+                        string encryptedPassword =
+                            Profile.Security.HashSHA1(enteredPassword);
+
+                        // Password from database
+                        string dbPassword =
+                            dt.Rows[0]["password"].ToString();
+
+                        // Compare passwords
+                        if (encryptedPassword.Equals(
+                        dbPassword,
+                        StringComparison.OrdinalIgnoreCase))
+                        {
+                            return new
+                            {
+                                message = "Success",
+                                status = "1",
+                                Details = new[]
+                                {
+                            new
+                            {
+                                user_id = dt.Rows[0]["user_id"],
+                                user_name = dt.Rows[0]["user_name"],
+                                IsRofr = dt.Rows[0]["IsRofr"],
+                                User_privileges = dt.Rows[0]["User_privileges"]
+                            }
+                        },
+                                Reason = "Login Successfully"
+                            };
+                        }
+                        else
+                        {
+                            return new
+                            {
+                                message = "Failure",
+                                status = "0",
+                                Details = "",
+                                Reason = "Invalid Password"
+                            };
+                        }
+                    }
+                }
+
+                return new
+                {
+                    message = "Failure",
+                    status = "0",
+                    Details = "",
+                    Reason = "Invalid Username or Password"
+                };
             }
             catch (Exception ex)
             {

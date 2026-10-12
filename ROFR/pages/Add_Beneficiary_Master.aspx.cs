@@ -1106,7 +1106,8 @@ namespace ROFR.pages
                                         {
                                             // location = HttpContext.Current.Server.MapPath("~/BeneficairyImages/" + DateTime.Now.ToString("dd-MM-yyyy") + "/" + imagefloder + "/" + benid + "/");
 
-                                            string locpath = @"F:\tribal\BeneficairyImages\";
+                                            string locpath = @"F:\tribal\BeneficairyImages\";//live code
+                                            //string locpath = @"C:\Apllications\giribhumi-staging\BeneficairyImages\";//staging  code
                                             string sc = @"\";
                                             location = (locpath + DateTime.Now.ToString("dd-MM-yyyy") + sc + imagefloder + sc + benid + sc);
 

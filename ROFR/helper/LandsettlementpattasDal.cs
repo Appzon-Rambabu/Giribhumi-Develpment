@@ -1224,7 +1224,7 @@ namespace ROFR.helper
             if (type == "Itda")
             {
 
-               // lstparams.Add(new SqlParameter("@PTYPE", "0"));
+                // lstparams.Add(new SqlParameter("@PTYPE", "0"));
 
                 if (userprevilages == "ALL" || userprevilages == "" || userprevilages == null)
                 {
@@ -1274,17 +1274,41 @@ namespace ROFR.helper
                 lstparams.Add(new System.Data.SqlClient.SqlParameter("@LGD_DISTRICT_CODE", district));
                 lstparams.Add(new System.Data.SqlClient.SqlParameter("@PTYPE", 3));
             }
-
+            //changed by sivaji 06102026
             else if (type == "Village")
             {
+                lstparams.Add(new SqlParameter("@ITDA_CODE", itda));
+                lstparams.Add(new SqlParameter("@LGD_DISTRICT_CODE", district));
+                lstparams.Add(new SqlParameter("@mandal", mandal));
 
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@ITDA_CODE", itda));
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@LGD_DISTRICT_CODE", district));
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@mandal", mandal));
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@Panchayat", panchayat));
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@RevVillage", revvillage));
-                lstparams.Add(new System.Data.SqlClient.SqlParameter("@PTYPE", 5));
+                lstparams.Add(new SqlParameter(
+                    "@Panchayat",
+                    string.IsNullOrWhiteSpace(panchayat)
+                        ? (object)DBNull.Value
+                        : panchayat
+                ));
+
+                lstparams.Add(new SqlParameter(
+                    "@RevVillage",
+                    string.IsNullOrWhiteSpace(revvillage)
+                        ? (object)DBNull.Value
+                        : revvillage
+                ));
+
+                lstparams.Add(new SqlParameter("@PTYPE", 5));
             }
+
+
+            //else if (type == "Village")
+            //{
+
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@ITDA_CODE", itda));
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@LGD_DISTRICT_CODE", district));
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@mandal", mandal));
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@Panchayat", panchayat));
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@RevVillage", revvillage));
+            //    lstparams.Add(new System.Data.SqlClient.SqlParameter("@PTYPE", 5));
+            //}
             else if (type == "Habitation")
             {
 
@@ -1314,7 +1338,7 @@ namespace ROFR.helper
             else if (type == "Beat")
             {
 
-               lstparams.Add(new System.Data.SqlClient.SqlParameter("@ITDA_CODE", itda));
+                lstparams.Add(new System.Data.SqlClient.SqlParameter("@ITDA_CODE", itda));
                 lstparams.Add(new System.Data.SqlClient.SqlParameter("@LGD_DISTRICT_CODE", district));
                 lstparams.Add(new System.Data.SqlClient.SqlParameter("@Forest_Division", mandal));
                 lstparams.Add(new System.Data.SqlClient.SqlParameter("@Forest_Range", panchayat));

@@ -1,40 +1,40 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Masters/ROFR_MASTER.Master" AutoEventWireup="true" CodeBehind="Update_FarmerImage.aspx.cs" Inherits="ROFR.pages.Update_FarmerImage" EnableEventValidation="false" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
      <script>
-        function show(input) {
-            debugger;
-            var validExtensions = ['jpg', 'png', 'jpeg','JPG','JPEG','PNG']; //array of valid extensions
-            var fileName = input.files[0].name;
-            var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
-                  
-                        var FileSize = input.files[0].size / 1024 / 1024; // in MB
-           
-         
-            if ($.inArray(fileNameExt, validExtensions) == -1) {
-                input.type = ''
-                input.type = 'file'
-                $('#user_img').attr('src', "");
-                alert("Only these image types are accepted : " + validExtensions.join(', '));
-                return false;
-                        }else if (FileSize > 2) {
-                    alert('File size exceeds 2 MB');
-                    return false;
-                }
-            else {
-                if (input.files && input.files[0]) {
+         function show(input) {
+             debugger;
+             var validExtensions = ['jpg', 'png', 'jpeg', 'JPG', 'JPEG', 'PNG']; //array of valid extensions
+             var fileName = input.files[0].name;
+             var fileNameExt = fileName.substr(fileName.lastIndexOf('.') + 1);
+
+             var FileSize = input.files[0].size / 1024 / 1024; // in MB
+
+
+             if ($.inArray(fileNameExt, validExtensions) == -1) {
+                 input.type = ''
+                 input.type = 'file'
+                 $('#user_img').attr('src', "");
+                 alert("Only these image types are accepted : " + validExtensions.join(', '));
+                 return false;
+             } else if (FileSize > 2) {
+                 alert('File size exceeds 2 MB');
+                 return false;
+             }
+             else {
+                 if (input.files && input.files[0]) {
                  <%--  document.getElementById('<%=txt_image.ClientID %>').value =  '<%= Server.MapPath("~/Beneficairy Images/" +"/"+ DateTime.Now.ToString("dd-MM-yyy") )%> '+"/"+fileName;--%>
                     <%--document.getElementById('<%=txt_image.ClientID %>').value = "Beneficairy Images/"+fileName;--%>
-                    var filerdr = new FileReader();
-                    filerdr.onload = function (e) {
-                        $('#user_img').attr('src', e.target.result);
-                    }
-                    filerdr.readAsDataURL(input.files[0]);
-                }
-               
-            }
-            
-        }
-        </script>
+                     var filerdr = new FileReader();
+                     filerdr.onload = function (e) {
+                         $('#user_img').attr('src', e.target.result);
+                     }
+                     filerdr.readAsDataURL(input.files[0]);
+                 }
+
+             }
+
+         }
+     </script>
      <style>
    
   
@@ -55,8 +55,127 @@
     .bg-nav{
       background-color: #008500 !important;
     }
-   
+ 
   </style>
+    
+    <style>
+
+        /* =========================
+   CAPTCHA REFRESH BUTTON
+   ========================= */
+
+.refresh-btn {
+    width: 54px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #8f8f8f;
+    background-color: #c6c6c6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.refresh-btn:hover {
+    background-color: #b5b5b5;
+}
+
+.refresh-btn i {
+    font-size: 20px;
+    color: #000000;
+}
+
+
+/* =========================
+   UPDATE PROGRESS LOADER
+   ========================= */
+
+.preloader {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.45) !important;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loader-box {
+    position: relative;
+    width: 82px;
+    height: 82px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading-msg {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading-msg img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    display: block;
+    margin: 0;
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 78px;
+    height: 78px;
+    box-sizing: border-box;
+    margin: -39px 0 0 -39px;
+    border: 2px solid rgba(0, 123, 255, 0.08);
+    border-top-color: #1689d4;
+    border-right-color: #1689d4;
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    z-index: 1;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================
+   SUBMIT BUTTON
+   ========================= */
+
+.submit-btn {
+    background-color: #008500 !important;
+    border: 1px solid #008500 !important;
+    color: #ffffff !important;
+    padding: 7px 25px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #006f00 !important;
+    border-color: #006f00 !important;
+}
+    </style>
+
+
+
+
+
      <%-- <style type="text/css">
         .header-center {
             text-align: center;
@@ -69,29 +188,51 @@
 .headertable .aftr th{position: sticky;top: 49x;}
 
      
-    </style>--%>
-     <script>
-     //     function Captcha(){
-     //    var alpha = new Array('0','1','2','3','4','5','6','7','8','9'
- 	 //   	);
-     //var i;
-     //for (i=0;i<6;i++){
-     //    var a = alpha[Math.floor(Math.random() * alpha.length)];
-     //    var b = alpha[Math.floor(Math.random() * alpha.length)];
-     //    var c = alpha[Math.floor(Math.random() * alpha.length)];
-     //    var d = alpha[Math.floor(Math.random() * alpha.length)];
-     //    var e = alpha[Math.floor(Math.random() * alpha.length)];
-        
-     //                 }
-     //    var code = a + ' ' + b + ' ' + ' ' + c + ' ' + d + ' ' + e ;
-     //    document.getElementById("mainCaptcha").innerHTML = code
-	 //    document.getElementById("mainCaptcha").value = code
-     //  }
-     function ValidCaptcha() {
+    
+/* Ensure the refresh control is visible even if Font Awesome is unavailable. */
+.refresh-btn {
+    width: 54px;
+    height: 40px;
+    padding: 0;
+    border: 1px solid #8f8f8f;
+    background: #f5f5f5;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.refresh-btn:hover { background: #e8e8e8; }
+.refresh-btn:focus { outline: 2px solid #80bdff; outline-offset: 1px; }
 
-        var itda = document.getElementById('<%=ddl_itda.ClientID %>').value;
-         var dist = document.getElementById('<%=ddl_dist.ClientID %>').value;
-         var mandal = document.getElementById('<%=ddl_mandal.ClientID %>').value;
+/* Translucent overlay: keep the page visible behind the loader. */
+.preloader {
+    background: rgba(255, 255, 255, 0.45) !important;
+}
+
+</style>--%>
+     <script>
+         //     function Captcha(){
+         //    var alpha = new Array('0','1','2','3','4','5','6','7','8','9'
+         //   	);
+         //var i;
+         //for (i=0;i<6;i++){
+         //    var a = alpha[Math.floor(Math.random() * alpha.length)];
+         //    var b = alpha[Math.floor(Math.random() * alpha.length)];
+         //    var c = alpha[Math.floor(Math.random() * alpha.length)];
+         //    var d = alpha[Math.floor(Math.random() * alpha.length)];
+         //    var e = alpha[Math.floor(Math.random() * alpha.length)];
+
+         //                 }
+         //    var code = a + ' ' + b + ' ' + ' ' + c + ' ' + d + ' ' + e ;
+         //    document.getElementById("mainCaptcha").innerHTML = code
+         //    document.getElementById("mainCaptcha").value = code
+         //  }
+         function ValidCaptcha() {
+
+             var itda = document.getElementById('<%=ddl_itda.ClientID %>').value;
+             var dist = document.getElementById('<%=ddl_dist.ClientID %>').value;
+             var mandal = document.getElementById('<%=ddl_mandal.ClientID %>').value;
          var village = document.getElementById('<%=ddl_village.ClientID %>').value;
 
              //var captcha = document.getElementById('txtInput').value;
@@ -143,19 +284,22 @@ function removeSpaces(string){
      return string.split(' ').join('');
 }
 
-    </script>
+     </script>
      <script type="text/javascript">
-        function noBack()
-         {
+         function noBack() {
              window.history.forward()
          }
-        noBack();
-        window.onload = noBack;
-        window.onpageshow = function(evt) { if (evt.persisted) noBack() }
-        window.onunload = function() { void (0) }
-    </script>
+         noBack();
+         window.onload = noBack;
+         window.onpageshow = function (evt) { if (evt.persisted) noBack() }
+         window.onunload = function () { void (0) }
+     </script>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+
+
+
+
       <div class="container-fluid">
                 <div class="row">
 
@@ -168,6 +312,18 @@ function removeSpaces(string){
                             <div class="panel panel-body">
 
                          <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+                                <asp:UpdateProgress ID="UPDATED" runat="server" AssociatedUpdatePanelID="UpdatePanel1">
+    <ProgressTemplate>
+        <div class="preloader">
+            <div class="loader-box">
+                <span id="loading-msg">
+                    <img src="../Rofrnewassets/images/aplogo.png" />
+                </span>
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </ProgressTemplate>
+</asp:UpdateProgress>
 
                                 
                                 
@@ -216,10 +372,7 @@ function removeSpaces(string){
                                         </div>
 
                                        
-                            </div>
-                             </ContentTemplate>
-
-                         </asp:UpdatePanel>
+                           
                                         <div class="row mb-2">
                                             <div class="col-md-4 text-right">Captcha <span style="color:Red;">*</span> : </div>
                                             <div class="col-md-4 text-left">
@@ -231,7 +384,19 @@ function removeSpaces(string){
                                                <%-- </div>--%>
                                             </div>
                                             <div class="col-md-1 text-left">
-                                                <button type="button" class="btn btn-light" value="Refresh" id="refresh" runat="server" onserverclick="Submit_Click"><i class="fa fa-refresh"></i></button>
+                                                <button type="button"
+        class="refresh-btn"
+        value="Refresh"
+        id="refresh"
+        runat="server"
+        onserverclick="Submit_Click"
+        title="Refresh Captcha">
+
+    <span aria-hidden="true" style="font-family: Arial, sans-serif; font-size: 27px; line-height: 1; color: #008500; font-weight: bold;">&#8635;</span>
+
+</button>
+
+                                                
                                             </div>
                                         </div>
 
@@ -248,7 +413,12 @@ function removeSpaces(string){
                                             <div class="col-md-4 text-right"></div>
                                             <div class="col-md-4 text-left">
                                                 <div class="form-group">
-                                                   <asp:Button ID="Button1"     OnClientClick="return ValidCaptcha() " runat="server" Text="Submit" OnClick="Button1_Click"  />
+                                                  <asp:Button ID="Button1"
+    CssClass="submit-btn"
+    OnClientClick="return ValidCaptcha();"
+    runat="server"
+    Text="Submit"
+    OnClick="Button1_Click" />
                                                 </div>
                                             </div>
                                         </div>
@@ -256,6 +426,10 @@ function removeSpaces(string){
                                        
                                     </div>
                                 </div>
+                                 </div>
+                             </ContentTemplate>
+
+                         </asp:UpdatePanel>
 
                                  <div class="row mb-10">
                                             <div class="table-responsive">

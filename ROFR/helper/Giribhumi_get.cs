@@ -987,14 +987,49 @@ namespace ROFR.helper
 
         public DataTable Get_Itdas_sp(addbeneficiary_details obj)
         {
+
             List<SqlParameter> lstparams = new List<SqlParameter>();
-
-            //obj.userprevilages = "ALL";
-            lstparams.Add(new SqlParameter("@userprevilages", obj.userprevilages));
-            lstparams.Add(new SqlParameter("@PTYPE", 19));
-
-
             SQLManager sqlmngr = new SQLManager();
+            string UserName = obj.UserName;
+            string a = string.Empty;
+            if (!string.IsNullOrEmpty(UserName))
+            {
+                a = UserName;
+            }
+            else
+            {
+                a = "admin123";
+            }
+
+            var regexItem = new Regex("_");
+            string start = string.Empty;
+            string ITDANAME = string.Empty;
+            if (regexItem.IsMatch(a))
+            {
+                var range = a.IndexOf('_');
+
+                start = a.Substring(0, range);
+                ITDANAME = a.Substring(a.LastIndexOf('_') + 1);
+            }
+
+
+            if (obj.userprevilages == "ALL" || obj.userprevilages == "" || obj.userprevilages == null)
+            {
+                obj.userprevilages = "ALL";
+                lstparams.Add(new SqlParameter("@userprevilages", obj.userprevilages));
+                lstparams.Add(new SqlParameter("@PTYPE", 19));
+            }
+            else if (start == "DTW")
+            {
+                lstparams.Add(new SqlParameter("@ITDA_NAME", start));
+                lstparams.Add(new SqlParameter("@District", ITDANAME));
+                lstparams.Add(new SqlParameter("@PTYPE", 19));
+            }
+            else
+            {
+                lstparams.Add(new SqlParameter("@userprevilages", obj.userprevilages));
+                lstparams.Add(new SqlParameter("@PTYPE", 19));
+            }
             DataTable result = sqlmngr.ExecuteProcedureReturnDataTable("PROC_ROFR_MASTER1", lstparams);
             return result;
         }
@@ -1237,12 +1272,53 @@ namespace ROFR.helper
         public DataTable Get_AllDropDowns_sp(addbeneficiary_details obj)
         {
             List<SqlParameter> lstparams = new List<SqlParameter>();
-            lstparams.Add(new SqlParameter("@PTYPE", 1));
             SQLManager sqlmngr = new SQLManager();
+            string UserName = obj.UserName;
+            string a = string.Empty;
+            if (!string.IsNullOrEmpty(UserName))
+            {
+                a = UserName;
+            }
+            else
+            {
+                a = "admin123";
+            }
+
+            var regexItem = new Regex("_");
+            string start = string.Empty;
+            string ITDANAME = string.Empty;
+            if (regexItem.IsMatch(a))
+            {
+                var range = a.IndexOf('_');
+
+                start = a.Substring(0, range);
+                ITDANAME = a.Substring(a.LastIndexOf('_') + 1);
+            }
+
+
+            if (obj.userprevilages == "ALL" || obj.userprevilages == "" || obj.userprevilages == null)
+            {
+                obj.userprevilages = "ALL";
+                lstparams.Add(new SqlParameter("@userprevilages", obj.userprevilages));
+                lstparams.Add(new SqlParameter("@PTYPE", 1));
+            }
+            else if (start == "DTW")
+            {
+                lstparams.Add(new SqlParameter("@ITDA_NAME", start));
+                lstparams.Add(new SqlParameter("@District", ITDANAME));
+                lstparams.Add(new SqlParameter("@PTYPE", 1));
+            }
+            else
+            {
+                lstparams.Add(new SqlParameter("@userprevilages", obj.userprevilages));
+                lstparams.Add(new SqlParameter("@PTYPE", 1));
+            }
+
+
             DataTable result = sqlmngr.ExecuteProcedureReturnDataTable("SP_IFR_Crop_Details_Dropdowns", lstparams);
             return result;
         }
-        
+
         public DataTable GetFarmerDetails_SP(CropDetails CropDetails)
         {
             DataTable result = new DataTable();
@@ -1332,7 +1408,18 @@ namespace ROFR.helper
             lstparams.Add(new SqlParameter("@INPUT17", (object)obj.Crop_quantity ?? DBNull.Value));
             lstparams.Add(new SqlParameter("@USER_NAME", (object)obj.USER_NAME ?? DBNull.Value));
             SQLManager sqlmngr = new SQLManager();
-            DataTable result = sqlmngr.ExecuteProcedureReturnDataTable("SP_IFR_CROP_DETAILS_INSERT",lstparams);
+            DataTable result = sqlmngr.ExecuteProcedureReturnDataTable("SP_IFR_CROP_DETAILS_INSERT", lstparams);
+            return result;
+        }
+        //====================Mobile Login API Service============================//
+        public DataTable Mobile_Login_data_valid_sp(addbeneficiary_details obj)
+        {
+            List<SqlParameter> lstparams = new List<SqlParameter>();
+            lstparams.Add(new SqlParameter("@UserName", obj.UserName));
+            lstparams.Add(new SqlParameter("@PTYPE", 1));
+
+            SQLManager sqlmngr = new SQLManager();
+            DataTable result = sqlmngr.ExecuteProcedureReturnDataTable("sp_User_Authentication", lstparams);
             return result;
         }
     }

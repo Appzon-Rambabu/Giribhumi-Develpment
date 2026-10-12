@@ -1243,6 +1243,7 @@
     <Content Include="pages\Phase1_Data.aspx" />
     <Content Include="pages\Phase1_Phase2_data.aspx" />
     <Content Include="pages\PSS_DETAILS.aspx" />
+    <Content Include="pages\QuerySearch.aspx" />
     <Content Include="pages\Rbfdr.aspx" />
     <Content Include="pages\RBSTATUS.aspx" />
     <Content Include="pages\Revenuewise_Loan_reports.aspx" />
@@ -2483,6 +2484,7 @@
       <DependentUpon>CompartmentWiseLatlongs1.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controllers\ClaimprocessController.cs" />
     <Compile Include="Controllers\CompartmentWiseController.cs" />
     <Compile Include="Controllers\EcropController.cs" />
     <Compile Include="Controllers\GiribhumiController.cs" />
@@ -4037,6 +4039,13 @@
     </Compile>
     <Compile Include="pages\PSS_DETAILS.aspx.designer.cs">
       <DependentUpon>PSS_DETAILS.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="pages\QuerySearch.aspx.cs">
+      <DependentUpon>QuerySearch.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="pages\QuerySearch.aspx.designer.cs">
+      <DependentUpon>QuerySearch.aspx</DependentUpon>
     </Compile>
     <Compile Include="pages\Rbfdr.aspx.cs">
       <DependentUpon>Rbfdr.aspx</DependentUpon>

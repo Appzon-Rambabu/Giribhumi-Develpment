@@ -4408,6 +4408,43 @@ namespace ROFR.helper
             return result;
         }
 
+        //Mobile login Support 
+        public dynamic Mobile_Login_data_valid(addbeneficiary_details obj)
+        {
+            dynamic obj_data = new ExpandoObject();
+            try
+            {
+
+                DataTable dt = userObj.Mobile_Login_data_valid_sp(obj);
+
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    obj_data.message = "Success";
+                    obj_data.status = "1";
+                    obj_data.Details = dt;
+                    obj_data.Reason = "Login Successfully";
+                }
+                else
+                {
+                    obj_data.message = "Failure";
+                    obj_data.Details = "";
+                    obj_data.status = "0";
+                    obj_data.Reason = "Login Failed";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                obj_data.status = "Failure";
+                obj_data.Reason = ex.Message.ToString();
+            }
+            finally
+            {
+
+            }
+            return obj_data;
+        }
+
     }
 
     public class RofrResponse
